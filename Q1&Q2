@@ -1,0 +1,165 @@
+Q1
+#include<stdio.h>
+main()
+{
+int q[20],p[50],c=0,c1,d,f,i,j,k=0,n,r,t,b[20],c2[20];
+printf("Enter no of pages:");
+scanf("%d",&n);
+printf("Enter the reference string:");
+for(i=0;i<n;i++)
+scanf("%d",&p[i]);
+printf("Enter no of frames:");
+scanf("%d",&f);
+q[k]=p[k];
+printf("\n\t%d\n",q[k]);
+c++;
+k++;
+for(i=1;i<n;i++)
+{
+c1=0;
+for(j=0;j<f;j++)
+{
+if(p[i]!=q[j])
+c1++;
+}
+if(c1==f)
+{
+c++;
+if(k<f)
+{
+q[k]=p[i];
+k++;
+for(j=0;j<k;j++)
+printf("\t%d",q[j]);
+printf("\n");
+}
+else
+{
+for(r=0;r<f;r++)
+{
+c2[r]=0;
+for(j=i-1;j<n;j--)
+{
+if(q[r]!=p[j])
+c2[r]++;
+else
+break;
+}
+}
+for(r=0;r<f;r++)
+b[r]=c2[r];
+for(r=0;r<f;r++)
+{
+for(j=r;j<f;j++)
+{
+if(b[r]<b[j])
+{
+t=b[r];
+b[r]=b[j];
+b[j]=t;
+}
+}
+}
+for(r=0;r<f;r++)
+{
+if(c2[r]==b[0])
+q[r]=p[i];
+printf("\t%d",q[r]);
+}
+printf("\n");
+}
+}
+}
+printf("\nThe no of page faults is %d",c);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+void mk_token(char *s,char *tok[])
+{
+int i=0;
+char *p;
+p=strtok(s," ");
+while(p!=NULL)
+{
+tok[i++]=p;
+p=strtok(NULL," ");
+}
+tok[i]=NULL;
+}
+void count(char *fn,char op)
+{
+int fh,cc=0,wc=0,lc=0;
+char c;
+fh=open(fn,O_RDONLY);
+if(fh==-1)
+{
+printf("File %s is Not Found!!\n",fn);
+return;
+}
+while(read(fh,&c,1)>0)
+{
+if(c==' ')
+wc++;
+else if(c=='\n')
+{
+wc++;
+lc++;
+}
+cc++;
+}
+close(fh);
+switch(op)
+{
+case 'c': printf("No. of characters = %d\n",cc);
+break;
+case 'w': printf("No. of words = %d\n",wc);
+break;
+case 'l': printf("No. of lines = %d\n",lc);
+break;
+default: printf("Bad Command!!");
+break;
+}
+}
+int main()
+{
+int pid;
+char ch;
+char buff[80], *args[10];
+printf("myshell$ ");
+fflush(stdin);
+fgets(buff,80,stdin);
+buff[strlen(buff)-1]='\0';
+mk_token(buff,args);
+if(strcmp(args[0],"count")==0)
+count(args[2],args[1][0]);
+else
+{
+if(execvp(args[0],args)==-1)
+printf("Command Not Found!!\nPlease Enter Proper Command\n");
+}
+return 0;
+}
